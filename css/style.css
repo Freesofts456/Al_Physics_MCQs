@@ -34,5 +34,13 @@ h2{font-size:1.15rem;margin:0 0 .6em}
 .row{display:grid;grid-template-columns:1fr 80px;gap:10px;align-items:center;margin:8px 0}
 .rev{border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
 .hide{display:none}
+.opt.sel{border-color:var(--acc)}.opt.sel .n{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.pal{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.pn{width:38px;height:38px;border-radius:8px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:inherit;cursor:pointer}
+.pn.ans{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
+.pn.flg{box-shadow:inset 0 -5px 0 #e0a100}
+.pn.cur{outline:3px solid var(--ink);outline-offset:1px}
+.clock{font-weight:800;font-variant-numeric:tabular-nums}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .top{display:flex;justify-content:flex-end}
 .top button{font:inherit;background:none;border:0;color:var(--mute);cursor:pointer}

@@ -17,6 +17,12 @@
   <h1>A/L භෞතික විද්‍යා MCQ පුහුණුව</h1>
   <p class="sub">පාඩම් තෝරා, ප්‍රශ්න වලට පිළිතුරු දෙන්න. එක් එක් පිළිතුරෙන් පසු විස්තරය පෙනේ.</p>
   <div class="card">
+    <h2>ආකෘති ප්‍රශ්න පත්‍ර</h2>
+    <p class="sub" style="margin-bottom:10px">කාලය සහිතව, ප්‍රශ්නයෙන් ප්‍රශ්නයට. පිළිතුරු පෙන්වන්නේ භාර දීමෙන් පසුවය.</p>
+    <div id="papers"></div>
+  </div>
+  <h2 style="margin-top:22px">නිදහස් පුහුණුව</h2>
+  <div class="card">
     <h2>පාඩම් තෝරන්න</h2>
     <div class="chips" id="topics"></div>
   </div>
@@ -39,6 +45,27 @@
   </div>
 </section>
 
+<section id="paper" class="hide">
+  <div class="meta"><span id="ptitle"></span><span>ඉතිරි කාලය: <span class="clock" id="clock"></span></span></div>
+  <div class="meta"><span id="ppos"></span></div>
+  <div class="card">
+    <p class="q" id="pqt"></p>
+    <div id="popts"></div>
+    <div class="btnrow">
+      <button class="btn ghost" id="pprev">පෙර ප්‍රශ්නය</button>
+      <button class="btn ghost" id="pnext">ඊළඟ ප්‍රශ්නය</button>
+      <button class="btn ghost" id="pflag"></button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>ප්‍රශ්න සිතියම</h2>
+    <p class="sub" style="margin:0">නිල් = පිළිතුරු දී ඇත, කහ රේඛාව = පසුව බැලීමට.</p>
+    <div class="pal" id="pal"></div>
+  </div>
+  <button class="btn" id="psub">ප්‍රශ්න පත්‍රය භාර දෙන්න</button>
+  <p class="sub" id="pmsg" role="status" style="margin-top:10px"></p>
+</section>
+
 <section id="res" class="hide">
   <div class="card">
     <h2>ඔබේ ප්‍රතිඵලය</h2>
@@ -56,6 +83,8 @@
 </main>
 
 <script src="js/questions.js"></script>
+<script src="js/papers.js"></script>
 <script src="js/app.js"></script>
+<script src="js/paper.js"></script>
 </body>
 </html>

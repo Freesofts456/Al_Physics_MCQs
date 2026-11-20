@@ -1,6 +1,6 @@
 var $=function(i){return document.getElementById(i)};
 var sel={},count=10,pool=[],idx=0,answers=[],done=false;
-function show(id){["start","quiz","res"].forEach(function(s){$(s).classList.toggle("hide",s!==id)});window.scrollTo(0,0)}
+function show(id){["start","quiz","paper","res"].forEach(function(s){$(s).classList.toggle("hide",s!==id)});window.scrollTo(0,0)}
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
 function buildStart(){
   T.forEach(function(n,i){sel[i]=true;var b=document.createElement("button");b.className="chip";b.textContent=n;b.setAttribute("aria-pressed","true");
@@ -44,7 +44,7 @@ function finish(){
   var w=$("wrong");w.innerHTML="";var wl=[];
   pool.forEach(function(q,i){if(answers[i]!==q.a){wl.push(q);var d=document.createElement("div");d.className="rev";
     d.innerHTML='<p><strong></strong></p><p></p><p></p>';
-    d.children[0].firstChild.textContent=q.q;d.children[1].textContent="ඔබේ පිළිතුර: "+(answers[i]+1)+". "+q.o[answers[i]];
+    d.children[0].firstChild.textContent=q.q;d.children[1].textContent="ඔබේ පිළිතුර: "+(answers[i]===undefined?"පිළිතුරක් නැත":(answers[i]+1)+". "+q.o[answers[i]]);
     d.children[2].textContent="නිවැරදි පිළිතුර: "+(q.a+1)+". "+q.o[q.a]+" | "+q.e;w.appendChild(d)}});
   $("wrongCard").classList.toggle("hide",!wl.length);$("wrongOnly").classList.toggle("hide",!wl.length);
   $("wrongOnly").onclick=function(){count=wl.length;start(wl)};
