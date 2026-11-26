@@ -7,41 +7,49 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css?v=3">
 </head>
 <body>
+<header class="hdr"><div class="hin"><b class="brand">භෞතික MCQ</b><span class="hsub">A/L භෞතික විද්‍යාව · පුහුණු පත්‍ර</span><button id="theme" class="lang" aria-label="තේමාව මාරු කරන්න">◐ තේමාව</button></div></header>
 <main>
-<div class="top"><button id="theme" aria-label="තේමාව මාරු කරන්න">තේමාව මාරු කරන්න</button></div>
-
 <section id="start">
   <h1>A/L භෞතික විද්‍යා MCQ පුහුණුව</h1>
-  <p class="sub">පාඩම් තෝරා, ප්‍රශ්න වලට පිළිතුරු දෙන්න. එක් එක් පිළිතුරෙන් පසු විස්තරය පෙනේ.</p>
-  <div class="card">
-    <h2>පාඩම් තෝරන්න</h2>
-    <div class="chips" id="topics"></div>
+  <p class="sub">පාඩම් තෝරා, ප්‍රශ්න වලට පිළිතුරු දෙන්න.</p>
+  <div class="xgrid">
+    <div>
+      <div class="card"><h2>පාඩම් තෝරන්න</h2><div class="chips" id="topics"></div></div>
+      <div class="card"><h2>ප්‍රශ්න ගණන</h2><div class="chips" id="counts"></div></div>
+      <div class="card"><h2>ක්‍රමය</h2><div class="chips" id="modes"></div><p class="sub" id="modeinfo" style="margin:12px 0 0"></p></div>
+    </div>
+    <aside class="card">
+      <h2>ඔබේ තෝරාගැනීම</h2>
+      <p id="sumline" style="margin:0 0 6px"></p>
+      <p class="sub" id="avail"></p>
+      <button class="btn wide" id="go">පුහුණුව ආරම්භ කරන්න</button>
+    </aside>
   </div>
-  <div class="card">
-    <h2>ප්‍රශ්න ගණන</h2>
-    <div class="chips" id="counts"></div>
-  </div>
-  <div class="card"><h2>ක්‍රමය</h2><div class="chips" id="modes"></div></div>
-  <button class="btn" id="go">පුහුණුව ආරම්භ කරන්න</button>
-  <p class="sub" id="avail" style="margin-top:12px"></p>
 </section>
 
 <section id="quiz" class="hide">
-  <div class="meta"><span id="pos"></span><span id="tp"></span></div>
-  <div class="bar"><i id="prog"></i></div>
-  <div class="card" style="margin-top:14px">
-    <p class="q" id="qt"></p>
-    <div id="opts"></div>
-    <div id="exp"></div>
-    <button class="btn" id="next" disabled>ඊළඟ ප්‍රශ්නය</button>
+  <div class="xgrid">
+    <div class="card">
+      <div class="meta"><span id="pos"></span><span id="tp" class="chip2"></span></div>
+      <div class="bar"><i id="prog"></i></div>
+      <p class="q" id="qt"></p>
+      <div id="opts"></div>
+      <div id="exp"></div>
+      <button class="btn" id="next" disabled>ඊළඟ ප්‍රශ්නය</button>
+    </div>
+    <aside class="card">
+      <h2>ප්‍රශ්න පුවරුව</h2>
+      <div class="pal" id="ppal"></div>
+      <p class="sub" style="margin:12px 0 0;font-size:.9rem">✓ නිවැරදි · ✗ වැරදි · තද රාමුව = දැන් ඇති ප්‍රශ්නය</p>
+    </aside>
   </div>
 </section>
 
 <section id="exam" class="hide">
-  <div class="xbar"><span id="xtp"></span><span id="timer" role="timer">00:00:00</span></div>
+  <div class="xbar"><span id="xtp" class="chip2"></span><span id="timer" role="timer">00:00:00</span></div>
   <div class="xgrid">
     <div class="card">
       <div class="meta"><span id="xpos"></span></div>
@@ -58,28 +66,29 @@
       <h2>ප්‍රශ්න පුවරුව</h2>
       <div class="pal" id="pal"></div>
       <p class="sub" id="pstat"></p>
-      <button class="btn" id="xsubmit">පත්‍රය බාරදෙන්න</button>
+      <button class="btn wide" id="xsubmit">පත්‍රය බාරදෙන්න</button>
     </aside>
   </div>
 </section>
 
 <section id="res" class="hide">
-  <div class="card">
-    <h2>ඔබේ ප්‍රතිඵලය</h2>
-    <p class="score" id="sc"></p>
-    <p class="sub" id="pc"></p>
-    <div id="tb"></div>
+  <div class="rgrid">
+    <div class="card">
+      <h2>ඔබේ ප්‍රතිඵලය</h2>
+      <p class="score" id="sc"></p>
+      <p class="sub" id="pc"></p>
+      <button class="btn wide" id="again">නැවත පුහුණු වන්න</button>
+      <button class="btn ghost wide" id="wrongOnly" style="margin-top:10px">වැරදි ප්‍රශ්න පමණක් නැවත කරන්න</button>
+    </div>
+    <div>
+      <div class="card"><h2>පාඩම් අනුව ප්‍රතිඵල</h2><div id="tb"></div></div>
+      <div class="card" id="wrongCard"><h2>නැවත බැලිය යුතු ප්‍රශ්න</h2><div id="wrong"></div></div>
+    </div>
   </div>
-  <div class="card" id="wrongCard">
-    <h2>නැවත බැලිය යුතු ප්‍රශ්න</h2>
-    <div id="wrong"></div>
-  </div>
-  <button class="btn" id="again">නැවත පුහුණු වන්න</button>
-  <button class="btn ghost" id="wrongOnly">වැරදි ප්‍රශ්න පමණක් නැවත කරන්න</button>
 </section>
 </main>
 
-<script src="js/questions.js"></script>
-<script src="js/app.js"></script>
+<script src="js/questions.js?v=3"></script>
+<script src="js/app.js?v=3"></script>
 </body>
 </html>

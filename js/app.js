@@ -9,15 +9,25 @@ function buildStart(){
     b.onclick=function(){count=c;[].forEach.call($("counts").children,function(x){x.setAttribute("aria-pressed",x===b)});upd()};$("counts").appendChild(b)});
   ["පුහුණු ක්‍රමය","විභාග ක්‍රමය"].forEach(function(n,k){var b=document.createElement("button");b.className="chip";b.textContent=n;
     b.setAttribute("aria-pressed",k===0);
-    b.onclick=function(){mode=k?"exam":"practice";[].forEach.call($("modes").children,function(x){x.setAttribute("aria-pressed",x===b)})};
+    b.onclick=function(){mode=k?"exam":"practice";upd();[].forEach.call($("modes").children,function(x){x.setAttribute("aria-pressed",x===b)})};
     $("modes").appendChild(b)});
   upd();
 }
 function avail(){return Q.filter(function(q){return sel[q.t]})}
-function upd(){var n=avail().length;$("go").disabled=n===0;$("avail").textContent=n?"තෝරාගත් පාඩම්වල ප්‍රශ්න "+n+"ක් තිබේ.":"අවම වශයෙන් එක් පාඩමක් තෝරන්න."}
-function start(list){pool=shuffle(list).slice(0,count);idx=0;answers=[];show("quiz");render()}
+function upd(){var n=avail().length,m=Math.min(count,n);$("go").disabled=n===0;
+  $("go").textContent=mode==="exam"?"විභාගය ආරම්භ කරන්න":"පුහුණුව ආරම්භ කරන්න";
+  $("avail").textContent=n?"තෝරාගත් පාඩම්වල ප්‍රශ්න "+n+"ක් තිබේ.":"අවම වශයෙන් එක් පාඩමක් තෝරන්න.";
+  $("sumline").textContent=(mode==="exam"?"විභාග ක්‍රමය · කාලය විනාඩි "+Math.round(m*2.4):"පුහුණු ක්‍රමය")+" · ප්‍රශ්න "+m;
+  $("modeinfo").textContent=mode==="exam"?"කාල ගණකය සහ ප්‍රශ්න පුවරුව සහිතයි. පිළිතුරු සහ විස්තර පෙනෙන්නේ පත්‍රය බාරදුන් පසුවය.":"එක් එක් පිළිතුරෙන් පසු විස්තරය පෙනේ."}
+var pst=[];
+function buildPPal(){pst=pool.map(function(){return ""});var p=$("ppal");p.innerHTML="";
+  pool.forEach(function(_,k){var s=document.createElement("span");s.className="pq";s.textContent=k+1;p.appendChild(s)})}
+function updPPal(){[].forEach.call($("ppal").children,function(s,k){
+  s.className="pq"+(pst[k]?" "+pst[k]:"")+(k===idx?" c":"");
+  s.setAttribute("aria-label","ප්‍රශ්නය "+(k+1)+(pst[k]==="ok"?": නිවැරදි":pst[k]==="bad"?": වැරදි":""))})}
+function start(list){pool=shuffle(list).slice(0,count);idx=0;answers=[];show("quiz");buildPPal();render()}
 function render(){
-  var q=pool[idx];done=false;
+  var q=pool[idx];done=false;updPPal();
   $("pos").textContent="ප්‍රශ්නය "+(idx+1)+" / "+pool.length;$("tp").textContent=T[q.t];
   $("prog").style.width=(idx/pool.length*100)+"%";$("qt").textContent=q.q;$("exp").innerHTML="";
   $("next").disabled=true;$("next").textContent=idx===pool.length-1?"ප්‍රතිඵල බලන්න":"ඊළඟ ප්‍රශ්නය";
@@ -29,7 +39,7 @@ function render(){
 function pick(i){
   if(done)return;done=true;var q=pool[idx];answers.push(i);
   [].forEach.call($("opts").children,function(b,k){b.disabled=true;if(k===q.a)b.classList.add("ok");else if(k===i)b.classList.add("bad")});
-  var ok=i===q.a;$("exp").innerHTML='<div class="exp'+(ok?'':' bad')+'"><strong></strong> <span></span></div>';
+  var ok=i===q.a;pst[idx]=ok?"ok":"bad";updPPal();$("exp").innerHTML='<div class="exp'+(ok?'':' bad')+'"><strong></strong> <span></span></div>';
   $("exp").querySelector("strong").textContent=ok?"නිවැරදියි!":"වැරදියි. නිවැරදි පිළිතුර: "+(q.a+1)+".";
   $("exp").querySelector("span").textContent=q.e;$("next").disabled=false;$("next").focus();
 }
