@@ -1,12 +1,16 @@
 var $=function(i){return document.getElementById(i)};
-var sel={},count=10,pool=[],idx=0,answers=[],done=false;
-function show(id){["start","quiz","paper","res"].forEach(function(s){$(s).classList.toggle("hide",s!==id)});window.scrollTo(0,0)}
+var sel={},count=10,pool=[],idx=0,answers=[],done=false,mode="practice",ex={};
+function show(id){["start","quiz","res","exam"].forEach(function(s){$(s).classList.toggle("hide",s!==id)});window.scrollTo(0,0)}
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
 function buildStart(){
   T.forEach(function(n,i){sel[i]=true;var b=document.createElement("button");b.className="chip";b.textContent=n;b.setAttribute("aria-pressed","true");
     b.onclick=function(){sel[i]=!sel[i];b.setAttribute("aria-pressed",sel[i]);upd()};$("topics").appendChild(b)});
   [5,10,20].forEach(function(c){var b=document.createElement("button");b.className="chip";b.textContent=c+" ප්‍රශ්න";b.setAttribute("aria-pressed",c===10);
     b.onclick=function(){count=c;[].forEach.call($("counts").children,function(x){x.setAttribute("aria-pressed",x===b)});upd()};$("counts").appendChild(b)});
+  ["පුහුණු ක්‍රමය","විභාග ක්‍රමය"].forEach(function(n,k){var b=document.createElement("button");b.className="chip";b.textContent=n;
+    b.setAttribute("aria-pressed",k===0);
+    b.onclick=function(){mode=k?"exam":"practice";[].forEach.call($("modes").children,function(x){x.setAttribute("aria-pressed",x===b)})};
+    $("modes").appendChild(b)});
   upd();
 }
 function avail(){return Q.filter(function(q){return sel[q.t]})}
@@ -44,13 +48,48 @@ function finish(){
   var w=$("wrong");w.innerHTML="";var wl=[];
   pool.forEach(function(q,i){if(answers[i]!==q.a){wl.push(q);var d=document.createElement("div");d.className="rev";
     d.innerHTML='<p><strong></strong></p><p></p><p></p>';
-    d.children[0].firstChild.textContent=q.q;d.children[1].textContent="ඔබේ පිළිතුර: "+(answers[i]===undefined?"පිළිතුරක් නැත":(answers[i]+1)+". "+q.o[answers[i]]);
+    d.children[0].firstChild.textContent=q.q;d.children[1].textContent=answers[i]<0?"පිළිතුරක් දී නැත":"ඔබේ පිළිතුර: "+(answers[i]+1)+". "+q.o[answers[i]];
     d.children[2].textContent="නිවැරදි පිළිතුර: "+(q.a+1)+". "+q.o[q.a]+" | "+q.e;w.appendChild(d)}});
   $("wrongCard").classList.toggle("hide",!wl.length);$("wrongOnly").classList.toggle("hide",!wl.length);
   $("wrongOnly").onclick=function(){count=wl.length;start(wl)};
   $("prog").style.width="100%";show("res");
 }
-$("go").onclick=function(){start(avail())};
+$("go").onclick=function(){mode==="exam"?startExam(avail()):start(avail())};
 $("again").onclick=function(){show("start")};
 $("theme").onclick=function(){var r=document.documentElement,dark=r.getAttribute("data-theme")==="dark"||(!r.getAttribute("data-theme")&&matchMedia("(prefers-color-scheme:dark)").matches);r.setAttribute("data-theme",dark?"light":"dark")};
+/* ---- විභාග ක්‍රමය (exam mode) ---- */
+function pad(n){return(n<10?"0":"")+n}
+function startExam(list){
+  pool=shuffle(list).slice(0,count);
+  ex={i:0,ans:pool.map(function(){return null}),flag:pool.map(function(){return false}),
+      end:Date.now()+Math.round(pool.length*2.4)*60000};
+  show("exam");buildPal();renderX();tick();ex.t=setInterval(tick,1000);
+}
+function tick(){var s=Math.max(0,Math.round((ex.end-Date.now())/1000));
+  $("timer").textContent=pad(Math.floor(s/3600))+":"+pad(Math.floor(s%3600/60))+":"+pad(s%60);
+  if(s===0)submitExam();}
+function buildPal(){var p=$("pal");p.innerHTML="";
+  pool.forEach(function(_,k){var b=document.createElement("button");b.className="pq";b.textContent=k+1;
+    b.setAttribute("aria-label","ප්‍රශ්නය "+(k+1));b.onclick=function(){ex.i=k;renderX()};p.appendChild(b)})}
+function renderX(){
+  var q=pool[ex.i];
+  $("xpos").textContent="ප්‍රශ්නය "+(ex.i+1)+" / "+pool.length;$("xtp").textContent=T[q.t];$("xq").textContent=q.q;
+  var box=$("xopts");box.innerHTML="";
+  q.o.forEach(function(t,k){var b=document.createElement("button");b.className="opt"+(ex.ans[ex.i]===k?" sel":"");
+    b.innerHTML='<span class="n">'+(k+1)+'</span><span></span>';b.lastChild.textContent=t;
+    b.onclick=function(){ex.ans[ex.i]=k;renderX()};box.appendChild(b)});
+  $("xflag").setAttribute("aria-pressed",ex.flag[ex.i]);
+  $("xprev").disabled=ex.i===0;$("xnext").disabled=ex.i===pool.length-1;
+  [].forEach.call($("pal").children,function(b,k){
+    b.className="pq"+(ex.ans[k]!==null?" a":"")+(ex.flag[k]?" f":"")+(k===ex.i?" c":"")});
+  var a=ex.ans.filter(function(x){return x!==null}).length,f=ex.flag.filter(Boolean).length;
+  $("pstat").textContent="පිළිතුරු: "+a+" · සලකුණු: "+f+" · ඉතිරි: "+(pool.length-a);
+}
+$("xprev").onclick=function(){ex.i--;renderX()};
+$("xnext").onclick=function(){ex.i++;renderX()};
+$("xflag").onclick=function(){ex.flag[ex.i]=!ex.flag[ex.i];renderX()};
+$("xclear").onclick=function(){ex.ans[ex.i]=null;renderX()};
+$("xsubmit").onclick=function(){var left=ex.ans.filter(function(x){return x===null}).length;
+  if(confirm(left?"ප්‍රශ්න "+left+"කට පිළිතුරු දී නැත. බාරදෙන්නද?":"පත්‍රය බාරදෙන්නද?"))submitExam()};
+function submitExam(){clearInterval(ex.t);answers=ex.ans.map(function(x){return x===null?-1:x});finish()}
 buildStart();
